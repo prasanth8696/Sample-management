@@ -30,6 +30,7 @@ class Employee(Base) :
    dob = Column(String(50),nullable=True)
    role = Column(String(50),nullable=False)
    isAproved = Column(Boolean ,default = False)
+   firstLogin = Column(Boolean,default = True)
    user = relationship('Users',back_populates='employee')
 
 class Users(Base) :

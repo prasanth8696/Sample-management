@@ -18,8 +18,18 @@ def main() :
   print('4 -> reset Password ')
   print('5 -> Get your password(this feature will deprecate in future ')
   print('6 -> Exit ')
-
-  choice = int(input('Enter '))
+  try :
+     choice = int(input('Enter '))
+  except ValueError :
+     clear()
+     print('Inavalid Input...')
+     main()
+     return
+  except Exception :
+     clear()
+     print('Something went wrong')
+     main()
+     return
 
   if choice == 1:
      sms.register()
@@ -29,7 +39,9 @@ def main() :
   elif choice == 3 :
      sms.adminLogin()
   elif choice == 4 :
-     sms.resetPassword()
+     user_id = input('enter user Id ')
+     self.clear()
+     sms.resetPassword(user_id)
   elif choice == 5 :
      sms.getPassword()
   elif choice == 6 :

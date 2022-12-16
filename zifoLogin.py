@@ -49,6 +49,7 @@ class ZifoLogin :
        self.clear()
        print('Invalid User ')
        return
+
      if user.status == False :
         self.clear()
         print('you are not authorized by admin Please contact your Adminstrator...')
@@ -60,32 +61,56 @@ class ZifoLogin :
         print('Successfully Logged...')
         time.sleep(1.5)
         print()
+        if user.firstLogin :
+          print('Please change your temp password... ')
+          print()
+          self.resetPassword(user.id)
+          time.sleep(1)
+          print()
+
 
 
         print(f'Welcome back {user.employee.name}\n')
         userObj = ZifoUser()
+        print()
+#        printExpireSamples(user)
+
         while(True) :
          print(
           '''
-               1 -> Add Samples(Scientist Only)
-               2 -> View My Samples(Scientist Only)
-               3 -> View all Samples(Scientist and lab assist)
-               4 -> Update Samples(Scientist Only)
-               5 -> Delete Samples(Scientist Only)
-               6 -> Logout
+
+ 1 -> Add Samples(Scientist Only)
+ 2 -> View My Samples(Scientist Only)
+ 3 -> View all Samples(Scientist and lab assist)
+ 4 -> Update Samples(Scientist Only)
+ 5 -> Delete Samples(Scientist Only)
+ 6 -> Logout
           '''
           #add doc string
               )
-         choice = int(input('Enter '))
+         try :
+            choice = int(input('Enter '))
+         except ValueError :
+             self.clear()
+             print('Invalid Input ')
+             continue
+         except Exception :
+             self.clear()
+             print('Invalid Input...')
+             continue
+
          if choice == 1 :
+           self.clear()
            userObj.addSamples(user)
          elif choice == 2 :
            userObj.getMySamples(user)
          elif choice == 3 :
            userObj.getAllSamples(user)
          elif choice == 4 :
+           self.clear()
            userObj.updateSamples(user)
          elif choice == 5 :
+           self.clear()
            userObj.deleteSamples(user)
          elif choice == 6 :
            self.clear()
@@ -133,8 +158,18 @@ class ZifoLogin :
              print('5 -> add Employee...')
              print('6 -> Delete User...')
              print('7 -> LogOut...\t')
-             n = int(input('Enter '))
-#             self.clear()
+
+             try :
+                n = int(input('Enter '))
+             except ValueError :
+               self.clear()
+               print('Inavalid Input...')
+               continue
+             except Exception :
+               self.clear()
+               print('Something Went Wrong')
+               continue
+
              if n == 1 :
                adminObj.unApprovedList()
              elif n == 2 :
@@ -164,14 +199,12 @@ class ZifoLogin :
 
 
 
-  def resetPassword(self):
-      self.clear()
-      user_id = input('Enter User Id ')
+  def resetPassword(self,user_id):
       user = session.query(Users).filter(Users.id == user_id).first()
       if user is None :
        print('Invalid User Id')
        return
-      password = input('Enter your password  ')
+      password = input('Enter your Old  password  ')
       #check password authendication...
       if user.password == password :
           print(
@@ -192,12 +225,17 @@ class ZifoLogin :
             session.commit()
             self.clear()
             print('Password sucessfully Updated')
+            user.firstLogin = False
+            session.commit()
             return
           else :
             print('Not Valid password...')
+            self.resetPassword(user_id)
+            return
 
       else :
           print('Password Mismatch...')
+          self.resetPassword(user_id)
           return
 
   def getPassword(self) :
