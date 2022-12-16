@@ -27,6 +27,7 @@ class ZifoAdmin :
           print()
       print()
       print()
+      session.close()
 
   def allUsersList(self):
       approvedUsers = 0;unapprovedUsers = 0
@@ -56,6 +57,7 @@ class ZifoAdmin :
         print(f'Total Users = {totalUsers}')
         print(f'Approved Users = {approvedUsers}')
         print(f'unApproved Users = {unapprovedUsers}')
+        session.close()
 
       else :
        self.clear()
@@ -80,11 +82,11 @@ class ZifoAdmin :
            name = name,
            email = email,
            dob = dob,
-           role = role,
-           isAproved = False
+           role = role
       )
      session.add(emp)
      session.commit()
+     session.close()
      print('Employee added sucessfully... ')
 
 
@@ -103,6 +105,7 @@ class ZifoAdmin :
     else :
        user.status = True
        session.commit()
+       session.close()
        print('User approved sucessfully... ')
        return
 
@@ -116,6 +119,7 @@ class ZifoAdmin :
     if user.status:
         user.status = False
         session.commit()
+        session.close()
         print('User disapproved Successfully')
        
     else :
@@ -129,10 +133,40 @@ class ZifoAdmin :
    self.clear()
    user = session.query(Users).filter(Users.id == id).first()
    if user is not None :
+     emp = session.query(Employee).filter(Employee.id == user.employee.id).first()
+     emp.isAproved = False
      session.delete(user)
      session.commit()
+     session.close()
      print('User Sucessfully deleted.... ')
      return
    else :
      print('User Not Found...')
      return
+
+
+  def blockEmp(self,id) :
+     self.clear()
+     emp = session.query(Employee).filter(Employee.id == id).first()
+     if emp is None :
+       print('Inavlid Employee id...')
+       return
+
+     emp.isAproved = False
+     emp.user[0].status = False
+     session.commit()
+     session.close()
+     print('Employee blocked sucessfully...')
+
+  def unblockEmp(self,id) :
+     self.clear()
+     emp = session.query(Employee).filter(Employee.id == id ).first()
+     if emp is None :
+       print('Inavlid Employee id...')
+       return
+
+     emp.isAproved = True
+     emp.user[0].status = True
+     session.commit()
+     session.close()
+     print('Employee unblocked sucessfully...')

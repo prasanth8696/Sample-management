@@ -29,8 +29,7 @@ class Employee(Base) :
    email = Column(String(50),nullable=True)
    dob = Column(String(50),nullable=True)
    role = Column(String(50),nullable=False)
-   isAproved = Column(Boolean ,default = False)
-   firstLogin = Column(Boolean,default = True)
+   isAproved = Column(Boolean ,default = True)
    user = relationship('Users',back_populates='employee')
 
 class Users(Base) :
@@ -38,7 +37,8 @@ class Users(Base) :
   id = Column(String(50),primary_key = True)
   password = Column(String(50),nullable=False)
   role = Column(String(50))
-  status = Column(Boolean,default=False)
+  status = Column(Boolean,default = False)
+  firstLogin = Column(Boolean,default = True)
   employee_id = Column(String(50),ForeignKey('employee.id'))
   employee = relationship('Employee',back_populates='user')
   samples = relationship('Sample',back_populates='author')

@@ -12,6 +12,7 @@ class ZifoLogin :
 
 
   def register(self) :
+    self.clear()
     id = input('Enter Employee Id... ')
     emp = session.query(Employee).filter(Employee.id == id).first()
 
@@ -20,6 +21,9 @@ class ZifoLogin :
       print('Employee id is Not Valid...')
       print()
       return
+    elif not  emp.isAproved :
+       print('you are Blocked by admin for Some reasons please contact your adminstarator...')
+       return
     elif len(emp.user) > 0 :
       print('User Already Exists... ')
     else :
@@ -155,9 +159,12 @@ class ZifoLogin :
              print('2 -> All Userslist...')
              print('3 -> Approve user...')
              print('4 -> DisApprove user...')
-             print('5 -> add Employee...')
-             print('6 -> Delete User...')
-             print('7 -> LogOut...\t')
+             print('5 -> Delete user')
+             print('6 -> Add Employee ')
+             print('7 -> show Employee ')
+             print('8 -> Block Employee ')
+             print('9 -> Unblock Employee ')
+             print('10 -> LogOut...\n')
 
              try :
                 n = int(input('Enter '))
@@ -181,11 +188,19 @@ class ZifoLogin :
                 user_id = input('Enter user id ')
                 adminObj.disApprove(user_id)
              elif n == 5 :
-                 adminObj.addEmployee()
-             elif n == 6 :
                  user_id = input('Enter user id ')
                  adminObj.deleteUser(user_id)
+             elif n == 6 :
+                 adminObj.addEmployee()
              elif n == 7 :
+                 adminObj.showEmployee()
+             elif n == 8 :
+                 emp_id = input('Enter emp id ')
+                 adminObj.blockEmp(user_id)
+             elif n == 9 :
+                 emp_id = input('Enter emp id ')
+                 adminObj.unblockEmp(user_id)
+             elif n == 10 :
                   self.clear()
                   time.sleep(1)
                   print('Sucessfully LoggedOut')
@@ -217,6 +232,7 @@ class ZifoLogin :
           # check new passowrd is old password or not
           if user.password == new_pass :
             print('It is Old password...')
+            self.resetPassword(user_id)
             return
           # check password is valid or not
           res = self.check_pass(new_pass)
@@ -225,15 +241,18 @@ class ZifoLogin :
             session.commit()
             self.clear()
             print('Password sucessfully Updated')
-            user.firstLogin = False
-            session.commit()
+            if user.firstLogin :
+              user.firstLogin = False
+              session.commit()
             return
           else :
+            self.clear()
             print('Not Valid password...')
             self.resetPassword(user_id)
             return
 
       else :
+          self.clear()
           print('Password Mismatch...')
           self.resetPassword(user_id)
           return

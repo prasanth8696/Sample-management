@@ -40,7 +40,7 @@ def main() :
      sms.adminLogin()
   elif choice == 4 :
      user_id = input('enter user Id ')
-     self.clear()
+     clear()
      sms.resetPassword(user_id)
   elif choice == 5 :
      sms.getPassword()
