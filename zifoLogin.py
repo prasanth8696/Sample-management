@@ -91,7 +91,7 @@ class ZifoLogin :
         print(f'Welcome back {user.employee.name}\n')
         userObj = ZifoUser()
         print()
-#        printExpireSamples(user)
+        userObj.printExpireSamples(user)
 
         while(True) :
          print(

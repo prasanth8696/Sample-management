@@ -57,6 +57,8 @@ class Admin(Base) :
 class Sample(Base) :
    __tablename__ = 'sample'
    id = Column(Integer,primary_key = True)
+   name = Column(String(50),nullable = False)
+   quantity = Column(String(20),nullable = False)
    reactive = Column(Boolean,nullable=False)
    entry_date = Column(DateTime,nullable=False)
    expire_date = Column(DateTime,nullable=False)
