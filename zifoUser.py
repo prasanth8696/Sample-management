@@ -29,6 +29,10 @@ class ZifoUser :
         print(red + 'Invalid Input...')
         self.addSamples(author)
         return
+     except KeyboardInterrupt :
+       self.clear()
+       print('program sucessfully exited using KeyboardInterrupt')
+       Exit()
      except Exception :
         print(red + 'Something went Wrong...')
         return
@@ -81,8 +85,8 @@ class ZifoUser :
          else :
             expireIn = green + str(expireTime.days) + 'days ' + str(expireTime.seconds) + 'sec'
 
-       print(str(expireIn).ljust(18),end='')
-       print(author.id.ljust(14),end='')
+       print(str(expireIn).ljust(30),end='')
+       print(author.id.rjust(7),end='')
        print('\n')
     print()
     print(f'your Total samples {len(samples)}')
@@ -119,8 +123,8 @@ class ZifoUser :
               expireIn = red + f'{expireTime.days}days {expireTime.seconds} sec'
             else :
                expireIn = green + f'{expireTime.days}days {expireTime.seconds} sec'
-       print(str(expireIn).ljust(18),end='')
-       print(author.id.ljust(14),end='')
+       print(str(expireIn).ljust(30),end='')
+       print(author.id.rjust(7),end='')
        print('\n')
     print()
     print(f'Total samples {len(samples)}')

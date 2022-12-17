@@ -116,6 +116,10 @@ class ZifoLogin :
              self.clear()
              print(red + 'Invalid Input ')
              continue
+         except KeyboardInterrupt :
+             self.clear()
+             print(green + 'program sucessfully exited using KeyBoardInterrupt')
+             exit()
          except Exception :
              self.clear()
              print(red + 'Invalid Input...')
@@ -190,6 +194,10 @@ class ZifoLogin :
                self.clear()
                print(red + 'Invalid Input...')
                continue
+             except KeyboardInterrupt :
+               self.clear()
+               print(green + 'program sucessfully exited using KeyBoardInterrupt')
+               exit()
              except Exception :
                self.clear()
                print(red + 'Something Went Wrong')

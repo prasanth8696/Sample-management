@@ -29,6 +29,10 @@ def main() :
      print(red + 'Invalid Input...')
      main()
      return
+  except KeyboardInterrupt :
+   clear()
+   print(green + 'program sucessfully exited using KeyBoard Interrupt')
+   exit()
   except Exception :
      clear()
      print(red + 'Something went wrong')
