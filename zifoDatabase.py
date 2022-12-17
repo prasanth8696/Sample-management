@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker,relationship
 
 
 
-
+#you can use any sql database by just change database url but i use sqlite database
 SQL_ALCHEMY_DATABASE_URL = 'sqlite:///./zifoDatabase.db'
 
 engine = create_engine(SQL_ALCHEMY_DATABASE_URL)
@@ -21,7 +21,7 @@ session = sessionlocal()
 
 #Base.metadata.create_all(bind=engine)
 
-
+#Employee table
 class Employee(Base) :
    __tablename__ = 'employee'
    id = Column(String(50),primary_key = True)
@@ -31,7 +31,7 @@ class Employee(Base) :
    role = Column(String(50),nullable=False)
    isAproved = Column(Boolean ,default = True)
    user = relationship('Users',back_populates='employee')
-
+#Users table
 class Users(Base) :
   __tablename__ = 'user'
   id = Column(String(50),primary_key = True)
@@ -47,13 +47,13 @@ class Users(Base) :
 
 
 
-
+# Admin table
 class Admin(Base) :
    __tablename__ = 'admin'
    id = Column(String(50),primary_key = True)
    name = Column(String(50),nullable=False)
    password = Column(String(50),nullable=False)
-
+#Sample table
 class Sample(Base) :
    __tablename__ = 'sample'
    id = Column(Integer,primary_key = True)
@@ -66,7 +66,7 @@ class Sample(Base) :
    author = relationship('Users',back_populates='samples')
 
 Base.metadata.create_all(bind=engine)
-
+#initilize deafult admin
 if __name__ == '__main__' :
   admin = session.query(Admin).all()
   if len(admin) == 0 :
@@ -81,4 +81,5 @@ if __name__ == '__main__' :
        )
      session.add(new_admin)
      session.commit()
+     session.close()
      print('Default admin Initilized...')

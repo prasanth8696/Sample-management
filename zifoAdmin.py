@@ -3,9 +3,11 @@ from zifoDatabase import session
 import os
 
 class ZifoAdmin :
+  #console refresh
   def clear(self):
     clear_val = 'cls' if os.name == 'nt' else 'clear'
     os.system(clear_val)
+  #print unapproved users
   def unApprovedList(self):
       users = session.query(Users).filter(Users.status == False).all()
       if users == [] :
@@ -13,7 +15,7 @@ class ZifoAdmin :
         print("Currently no unapproved users")
         return
       self.clear()
-      print('__________unapproved list______________')
+      print('_____________unapproved list______________')
       print()
       print('User_Id     Employee_Id     Name      role    status ')
       print()
@@ -28,13 +30,13 @@ class ZifoAdmin :
       print()
       print()
       session.close()
-
+  #print all unapproved and approved users
   def allUsersList(self):
       approvedUsers = 0;unapprovedUsers = 0
       users = session.query(Users).all()
       if users :
         self.clear()
-        print('__________Users list______________')
+        print('___________________Users list_____________________')
         print()
         print('User_Id     Employee_Id     Name      role    status ')
         print()
@@ -64,7 +66,7 @@ class ZifoAdmin :
        print('Currently No users...')
 
 
-
+  # add employee in database
   def addEmployee(self):
      self.clear()
      emp_id = input('Enter Emoloyee id ')
@@ -93,7 +95,7 @@ class ZifoAdmin :
 
 
 
-
+  # Approve users
   def approve(self,id):
     self.clear()
     user =  session.query(Users).filter(Users.id == id).first()
@@ -109,7 +111,7 @@ class ZifoAdmin :
        print('User approved sucessfully... ')
        return
 
-
+  # Disapprove users
   def disApprove(self,id):
     self.clear()
     user =  session.query(Users).filter(Users.id == id).first()
@@ -128,7 +130,7 @@ class ZifoAdmin :
 
 
 
-
+  # Delete users
   def deleteUser(self,id):
    self.clear()
    user = session.query(Users).filter(Users.id == id).first()
@@ -144,7 +146,7 @@ class ZifoAdmin :
      print('User Not Found...')
      return
 
-
+  #Block specified employee
   def blockEmp(self,id) :
      self.clear()
      emp = session.query(Employee).filter(Employee.id == id).first()
@@ -161,7 +163,7 @@ class ZifoAdmin :
        session.commit()
        session.close()
        print('Employee blocked sucessfully...')
-
+  #Unblock Specified Emoloyee
   def unblockEmp(self,id) :
      self.clear()
      emp = session.query(Employee).filter(Employee.id == id ).first()
@@ -178,3 +180,30 @@ class ZifoAdmin :
        session.commit()
        session.close()
        print('Employee unblocked sucessfully...')
+
+
+  #Show Employee nessesary details
+  def showEmployee(self) :
+     self.clear()
+     emps = session.query(Employee).all()
+     if emps is None :
+        print('No employee available in our database...')
+        return
+     print('Emp_id       name        blocked        user_id'  )
+     for emp in emps :
+         print(emp.id.ljust(9),end='')
+         print(emp.name.ljust(15),end='')
+         print(str(not emp.isAproved).ljust(10),end='')
+         if emp.user :
+            print(emp.user[0].id.ljust(14),end='')
+         else :
+           print('None'.ljust(10),end='')
+         print('\n')
+     print('\n')
+
+
+
+
+
+
+
