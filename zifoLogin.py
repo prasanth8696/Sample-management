@@ -5,6 +5,9 @@ from zifoGenerate import userIdGenerate,passwordGenerate,qnDict
 from zifoDatabase import Admin,Employee,Users
 from zifoAdmin import ZifoAdmin
 from zifoUser import ZifoUser
+from style import *
+from colorama import init
+init(autoreset=True)
 class ZifoLogin :
   def clear(self):
      val = 'cls' if os.name == 'nt' else 'clear'
@@ -13,31 +16,31 @@ class ZifoLogin :
    #Register user using Employee id
   def register(self) :
     self.clear()
-    id = input('Enter Employee Id... ')
+    id = input(yellow + 'Enter Employee Id... '+normal)
     emp = session.query(Employee).filter(Employee.id == id).first()
 
     if emp is None :
       self.clear()
-      print('Employee id is Not Valid...')
+      print(red + 'Employee id is Not Valid...')
       print()
       return
     elif not  emp.isAproved :
-       print('you are Blocked by admin for Some reasons please contact your adminstarator...')
+       print(red + 'you are Blocked by admin for Some reasons please contact your adminstarator...')
        return
     elif len(emp.user) > 0 :
-      print('User Already Exists... ')
+      print(red + 'User Already Exists... ')
     else :
       for id,question in qnDict.items() :
         print(f'{id} - {question}')
       
       print('\nSelect security questions for Authendication...')
       try :
-        qn_no = int(input('Enter anyOne scurity qn Id '))
-        ans = input('Enter Answer... ')
+        qn_no = int(input(yellow + 'Enter anyOne of the scurity qn Id ' + normal))
+        ans = input(yellow + 'Enter Answer... ' + normal)
         if qn_no > 5 and qn_no < 1 :
            raise ValueError
       except ValueError :
-        print('Inavlid security question Id')
+        print(red + 'Inavlid security question Id')
         return
       user_id = userIdGenerate(emp.role)
       password = passwordGenerate()
@@ -51,36 +54,37 @@ class ZifoLogin :
            )
       session.add(new_user)
       session.commit()
-      print(f'Generated User id {user_id}')
-      print(f'Generated Password {password}')
+      self.clear()
+      print(pink + f'Generated User id {user_id}')
+      print(pink + f'Generated Password {password}')
       return
 
   #Employee Login...
   def employeeLogin(self):
      self.clear()
-     print('_______________User Login Page_______________')
+     print(sky_blue + '_______________User Login Page_______________')
      print()
-     user_id = input('Enter user id ')
+     user_id = input(yellow + 'Enter user id ' + normal)
      print()
      user = session.query(Users).filter(Users.id == user_id).first()
      if user is None :
        self.clear()
-       print('Invalid User ')
+       print(red + 'Invalid User ')
        return
 
      if user.status == False :
         self.clear()
-        print('you are not authorized by admin Please contact your Adminstrator...')
+        print(red + 'you are not authorized by admin Please contact your Adminstrator...')
         return
-     password = input('Enter password... ')
+     password = input(yellow + 'Enter password... ' + normal)
 
      if password == user.password :
         self.clear()
-        print('Successfully Logged...')
+        print(green + 'Successfully Logged...')
         time.sleep(1.5)
         print()
         if user.firstLogin :
-          print('Please change your temp password... ')
+          print(yellow + 'Please change your temp password... ')
           print()
           self.resetPassword(user.id)
           time.sleep(1)
@@ -88,7 +92,7 @@ class ZifoLogin :
 
 
 
-        print(f'Welcome back {user.employee.name}\n')
+        print(f'Welcome back {pink}{user.employee.name}\n')
         userObj = ZifoUser()
         print()
         userObj.printExpireSamples(user)
@@ -107,14 +111,14 @@ class ZifoLogin :
           #add doc string
               )
          try :
-            choice = int(input('Enter '))
+            choice = int(input(yellow + 'Enter ' + normal ) )
          except ValueError :
              self.clear()
-             print('Invalid Input ')
+             print(red + 'Invalid Input ')
              continue
          except Exception :
              self.clear()
-             print('Invalid Input...')
+             print(red + 'Invalid Input...')
              continue
 
          if choice == 1 :
@@ -132,39 +136,39 @@ class ZifoLogin :
            userObj.deleteSamples(user)
          elif choice == 6 :
            self.clear()
-           print('Successfully loggedOut...')
+           print(green + 'Successfully loggedOut...')
            time.sleep(1)
            return
         else :
            self.clear()
-           print('Invalid Choice...')
+           print(red + 'Invalid Choice...')
      else:
-        print('Password mismatch...')
+        print(red + 'Password mismatch...')
         return
 
    #Admin login 
   def adminLogin(self):
      self.clear()
-     print('______________Adminstrator Login______________')
+     print(sky_blue + '______________Adminstrator Login______________')
      print()
-     user_id = input('Enter Admin Id ')
+     user_id = input(yellow + 'Enter Admin Id ' + normal)
      print()
      admin = session.query(Admin).filter(Admin.id == user_id).first()
      if admin is None :
-       print('Administrator Not Found...')
+       print(red + 'Administrator Not Found...')
        print()
-       time.sleep(1.5)
+       time.sleep(1)
        return
      else :
-        password = input('Enter password... ')
+        password = input(yellow + 'Enter password... ' + normal)
         if admin.password == password :
-            print('Logging...')
+            print(yellow + 'Logging...')
             time.sleep(2)
             self.clear()
-            print('sucessfully logged')
+            print(green + 'sucessfully logged')
             print()
             adminObj = ZifoAdmin()
-            print(f'Welcome back Master...{admin.name}')
+            print(f'Welcome back Master...{pink}{admin.name}')
             print()
             time.sleep(1)
             while(True) :
@@ -181,14 +185,14 @@ class ZifoLogin :
              print('10 -> LogOut...\n')
 
              try :
-                n = int(input('Enter '))
+                n = int(input(yellow + 'Enter ' + normal))
              except ValueError :
                self.clear()
-               print('Inavalid Input...')
+               print(red + 'Invalid Input...')
                continue
              except Exception :
                self.clear()
-               print('Something Went Wrong')
+               print(red + 'Something Went Wrong')
                continue
 
              if n == 1 :
@@ -196,34 +200,34 @@ class ZifoLogin :
              elif n == 2 :
                adminObj.allUsersList()
              elif n == 3 :
-                user_id = input('Enter user id ')
+                user_id = input(yellow + 'Enter user id ' + normal)
                 adminObj.approve(user_id)
              elif n == 4 :
-                user_id = input('Enter user id ')
+                user_id = input(yellow + 'Enter user id ' + normal)
                 adminObj.disApprove(user_id)
              elif n == 5 :
-                 user_id = input('Enter user id ')
+                 user_id = input(yellow + 'Enter user id ' + normal)
                  adminObj.deleteUser(user_id)
              elif n == 6 :
                  adminObj.addEmployee()
              elif n == 7 :
                  adminObj.showEmployee()
              elif n == 8 :
-                 emp_id = input('Enter emp id ')
+                 emp_id = input(yellow + 'Enter emp id ' + normal)
                  adminObj.blockEmp(emp_id)
              elif n == 9 :
-                 emp_id = input('Enter emp id ')
+                 emp_id = input(yellow +'Enter emp id ' + normal)
                  adminObj.unblockEmp(emp_id)
              elif n == 10 :
                   self.clear()
                   time.sleep(1)
-                  print('Sucessfully LoggedOut')
+                  print(green + 'Sucessfully LoggedOut')
                   print()
                   return
              else :
-                print('Invalid Input...')
+                print(red + 'Invalid Input...')
         else :
-           print('password Mismatch...')
+           print(red + 'password Mismatch...')
            return
 
 
@@ -231,9 +235,9 @@ class ZifoLogin :
   def resetPassword(self,user_id):
       user = session.query(Users).filter(Users.id == user_id).first()
       if user is None :
-       print('Invalid User Id')
+       print(red + 'Invalid User Id')
        return
-      password = input('Enter your Old  password  ')
+      password = input(yellow + 'Enter your Old  password  ' + normal)
       #check password authendication...
       if user.password == password :
           print(
@@ -242,10 +246,10 @@ class ZifoLogin :
                   * Minimum 1 Small letter
                   * Minimum 1 numeric and Symbol\n '''
                 )
-          new_pass = input('Enter New Password  ')
+          new_pass = input(yellow + 'Enter New Password  ' + normal)
           # check new passowrd is old password or not
           if user.password == new_pass :
-            print('It is Old password...')
+            print(yellow + 'It is Old password...')
             self.resetPassword(user_id)
             return
           # check password is valid or not
@@ -254,29 +258,29 @@ class ZifoLogin :
             user.password = new_pass
             session.commit()
             self.clear()
-            print('Password sucessfully Updated')
+            print(green + 'Password sucessfully Updated')
             if user.firstLogin :
               user.firstLogin = False
               session.commit()
             return
           else :
             self.clear()
-            print('Not Valid password...')
+            print(red + 'Not Valid password...')
             self.resetPassword(user_id)
             return
 
       else :
           self.clear()
-          print('Password Mismatch...')
+          print(red + 'Password Mismatch...')
           self.resetPassword(user_id)
           return
 #This method was Deprecated 
   def getPassword(self) :
      self.clear()
-     user_id = input('enter user id ')
+     user_id = input(yellow + 'enter user id ' + normal)
      user = session.query(Users).filter(Users.id == user_id).first()
      if user is None :
-       print('Inavlid user Id')
+       print(red + 'Invalid user Id')
        return
      else :
         print(f'Your password is {user.password}')
@@ -287,11 +291,12 @@ class ZifoLogin :
      count += 1
      user = session.query(Users).filter(Users.id == user_id).first()
      if user is None :
-       print('Invalid user...')
+       print(red + 'Invalid user...')
        return
      qn_no = str(user.qn_no)
      print(f'your security question is : \n\t{qnDict[qn_no]}')
-     answer = input('Enter your Answer... ')
+
+     answer = input(yellow + 'Enter your Answer... ' + normal)
      if answer == user.answer :
           print(
               ''' * Length must be atleast 8 and maximum 15
@@ -299,22 +304,22 @@ class ZifoLogin :
                   * Minimum 1 Small letter
                   * Minimum 1 numeric and Symbol\n '''
                 )
-          new_pass = input('Enter New Password  ')
+          new_pass = input(yellow + 'Enter New Password  ' + normal)
           # check password is valid or not
           res = self.check_pass(new_pass)
           if res :
-            retype_pass = input('Enter your Passoword Again... ')
+            retype_pass = input(yellow + 'Enter your Passoword Again... ' + normal)
             if new_pass == retype_pass :
               user.password = new_pass
               session.commit()
               self.clear()
-              print('Password sucessfully Updated')
+              print(green + 'Password sucessfully Updated')
             else :
               if count >= 3 :
-                print('Too many attempts...')
+                print(red + 'Too many attempts...')
                 return
 
-              print('New Password Mismatch...')
+              print(red + 'New Password Mismatch...')
               self.forgetPassword(user_id,count)
               return
 #if user forget password before first login you must change the firstLogin value == False
@@ -325,16 +330,16 @@ class ZifoLogin :
           else :
             self.clear()
             if count >= 3:
-              print('Too many attempts...')
+              print(red + 'Too many attempts...')
               return
 
-            print('Not Valid password...')
+            print(red + 'Not Valid password...')
             self.forgetPassword(user_id,count)
             return
 
      else :
           self.clear()
-          print('Answer is Wrong...')
+          print(red + 'Answer is Wrong...')
           print(f'{3-count} attempts left...')
           if count >= 3 :
             return

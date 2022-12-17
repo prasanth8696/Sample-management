@@ -1,6 +1,9 @@
 import os
 import datetime
 from zifoDatabase import session,Sample
+from style import *
+from colorama import init
+init(autoreset=True)
 
 class ZifoUser :
 
@@ -12,22 +15,22 @@ class ZifoUser :
   # Register samples...
   def addSamples(self,author) :
      if author.role == 'LAB' :
-       print('you dont have rights to do add samples... ')
+       print(red + 'you dont have rights to do add samples... ')
        return
      try :
-       name = input('Enter Reagents name ')
-       quantity = input('Enter quantity in kg(Liguid also)  ')
-       type = int(input('enter type of reactive 1 => reactive,0 => Non reactive '))
-       expire_days = int(input('Enter no of days to expire '))
+       name = input(yellow + 'Enter Reagents name ' + normal )
+       quantity = input(yellow +'Enter quantity in kg(Liguid also)  ' + normal)
+       type = int(input(yellow + 'enter type of reactive 1 => reactive,0 => Non reactive ' + normal))
+       expire_days = int(input(yellow + 'Enter no of days to expire ' + normal))
        if type > 1 and type < 0 :
          raise ValueError
      except ValueError :
         self.clear()
-        print('Invalid Input...')
+        print(red + 'Invalid Input...')
         self.addSamples(author)
         return
      except Exception :
-        print('Something went Wrong...')
+        print(red + 'Something went Wrong...')
         return
      type = bool(type)
      new_samples = Sample(
@@ -40,21 +43,22 @@ class ZifoUser :
             )
      session.add(new_samples)
      session.commit()
-     print('Sample added sucessfully...')
+     self.clear()
+     print(green + 'Sample added sucessfully...')
      return
 
   #get only my samples
   def getMySamples(self,author):
     self.clear()
     if author.role == 'LAB' :
-       print('you dont have rights to do add samples...')
+       print(red + 'you dont have rights to do add samples...')
        return
     samples = session.query(Sample).filter(Sample.author_id == author.id).all()
     if samples == [] :
-      print('You dont have any samples...')
+      print(green + 'You dont have any samples...')
       return
 
-    print('Id     name       Type      quantity(kg)      addedDate      Expirein        author') 
+    print(sky_blue + 'Id     name       Type      quantity(kg)      addedDate      Expirein        author') 
     reactive = 0;non_reactive = 0
     for sample in samples :
        if sample.reactive == True :
@@ -69,10 +73,13 @@ class ZifoUser :
        addedDate = str(sample.entry_date.date())
        print(addedDate.ljust(14),end='')
        if datetime.datetime.now() > sample.expire_date :
-         expireIn = 'Expired'
+         expireIn = red + 'Expired'
        else:
          expireTime =sample.expire_date - datetime.datetime.now()
-         expireIn = str(expireTime.days) + 'days ' + str(expireTime.seconds) + 'sec'
+         if expireTime.days < 15 :
+            expireIn = red + str(expireTime.days) + 'days ' + str(expireTime.seconds) + 'sec'
+         else :
+            expireIn = green + str(expireTime.days) + 'days ' + str(expireTime.seconds) + 'sec'
 
        print(str(expireIn).ljust(18),end='')
        print(author.id.ljust(14),end='')
@@ -87,10 +94,10 @@ class ZifoUser :
     self.clear()
     samples = session.query(Sample).all()
     if samples == [] :
-      print('Currently No Samples available...')
+      print(green + 'Currently No Samples available...')
       return
 
-    print('Id      name       Type     quantity(Kg)      addedDate      Expirein       author')
+    print(sky_blue + 'Id      name       Type     quantity(Kg)      addedDate      Expirein       author')
     reactive = 0;non_reactive = 0
     for sample in samples :
        if sample.reactive == True :
@@ -105,10 +112,13 @@ class ZifoUser :
        addedDate = str(sample.entry_date.date())
        print(addedDate.ljust(14),end='')
        if datetime.datetime.now() > sample.expire_date :
-            expireIn = 'Expired'
+            expireIn = red + 'Expired'
        else :
             expireTime = sample.expire_date - datetime.datetime.now()
-            expireIn = f'{expireTime.days}days {expireTime.seconds} sec'
+            if expireTime.days < 15 :
+              expireIn = red + f'{expireTime.days}days {expireTime.seconds} sec'
+            else :
+               expireIn = green + f'{expireTime.days}days {expireTime.seconds} sec'
        print(str(expireIn).ljust(18),end='')
        print(author.id.ljust(14),end='')
        print('\n')
@@ -120,55 +130,55 @@ class ZifoUser :
   #Update samples...
   def updateSamples(self,author) :
     if author.role == 'LAB' :
-      print('you dont have permissions to update the samples...')
+      print(red + 'you dont have permissions to update the samples...')
       return
     #Input Exception
     try :
-       sample_id = int(input('Enter sample id '))
+       sample_id = int(input(yellow + 'Enter sample id ' + normal))
     except ValueError :
        self.clear()
-       print('Invalid Input...')
+       print(red + 'Invalid Input...')
        self.updateSamples(author)
        return
 
     sample = session.query(Sample).filter(sample_id == sample_id).first()
     if sample is None :
-      print('Inavlid sample Id...')
+      print(red + 'Invalid sample Id...')
       return
     if sample.author_id != author.id :
-      print('you dont have permissions to update another person samples')
+      print(red + 'you dont have permissions to update another person samples')
       return
-    expire = int(input('add new samples ,enter new expirey days'))
-    quantity = input('Enter quantity in kg ')
+    expire = int(input(yellow + 'add new samples ,enter new expirey days' + normal))
+    quantity = input(yellow + 'Enter quantity in kg '+ normal)
     new_expire = datetime.datetime.now() + datetime.timedelta(expire)
     sample.entry_date = datetime.datetime.now()
     sample.expire_date = new_expire
     sample.quantity = quantity
     session.commit()
-    print('Sample succesfully updated...')
+    print(green + 'Sample succesfully updated...')
 
   # Delete sampels
   def deleteSamples(self,author):
     if author.role == 'LAB' :
-      print('you dont have permissions to delete the samples...')
+      print(red + 'you dont have permissions to delete the samples...')
       return
     try :
-      sample_id = int(input('Enter Sample Id '))
+      sample_id = int(input(yellow + 'Enter Sample Id ' + normal))
     except ValueError :
       self.clear()
-      print('Invalid Input...')
+      print(red + 'Invalid Input...')
       self.deleteSamples(author)
       return
     sample = session.query(Sample).filter(Sample.id == sample_id).first()
     if sample is None :
-      print('Inavalid sample Id...')
+      print(red + 'Invalid sample Id...')
       return
     if sample.author_id != author.id :
-      print('you dont have permissions to delete another person samples ...')
+      print(red + 'you dont have permissions to delete another person samples ...')
       return
     session.delete(sample)
     session.commit()
-    print('Sample deleted Successfully...')
+    print(green + 'Sample deleted Successfully...')
 
   # print which samples will expired in 15 days...
   def printExpireSamples(self,user) :
@@ -178,14 +188,14 @@ class ZifoUser :
        samples = session.query(Sample).filter(Sample.author_id == user.id).all()
     if samples is None :
       return
-    print('Expire Notifications\n' )
-    print('Id        name             ExpireIn  ')
+    print(red + 'Expire Notifications\n' )
+    print(sky_blue + 'Id        name             ExpireIn  ')
     for sample in samples :
           expire_days = sample.expire_date - datetime.datetime.now()
           if expire_days.days <= 15 :
              print(str(sample.id).ljust(10),end='')
              print(sample.name.ljust(15),end='')
-             print(expire_days,end='')
+             print(red + str(expire_days),end='')
              print('\n')
 
     print('\n')

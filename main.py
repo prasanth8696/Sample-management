@@ -1,5 +1,9 @@
 import os
 from zifoLogin import ZifoLogin
+from style import *
+from colorama import init
+init(autoreset=True)
+
 
 
 
@@ -9,7 +13,7 @@ clear()
 sms =ZifoLogin()
 def main() :
   print()
-  print('__________Zifo Sample Management System___________')
+  print(sky_blue + '__________Zifo Sample Management System___________')
   print()
 
   print('1 -> User Registration')
@@ -17,17 +21,17 @@ def main() :
   print('3 -> Admin Signin ')
   print('4 -> reset Password ')
   print('5 -> Forget Password ')
-  print('6 -> Exit ')
+  print('6 -> Exit  ')
   try :
-     choice = int(input('Enter '))
+     choice = int(input(yellow + 'Enter ' + normal))
   except ValueError :
      clear()
-     print('Inavalid Input...')
+     print(red + 'Invalid Input...')
      main()
      return
   except Exception :
      clear()
-     print('Something went wrong')
+     print(red + 'Something went wrong')
      main()
      return
 
@@ -39,20 +43,21 @@ def main() :
   elif choice == 3 :
      sms.adminLogin()
   elif choice == 4 :
-     user_id = input('enter user Id ')
+     user_id = input(yellow+ 'enter user Id ' + normal)
      clear()
      sms.resetPassword(user_id)
   elif choice == 5 :
-     user_id = input('enter user Id ')
+     user_id = input(yellow + 'enter user Id ' + normal)
      clear()
      sms.forgetPassword(user_id)
   elif choice == 6 :
      clear()
-     print(' program Sucessfully terminated...')
+     print(green +' program Sucessfully terminated...')
+     print('                         Developed by'+ red + ' Shan....' )
      exit()
 
   else :
-    print('Invalid Input')
+    print(red + 'Invalid Input')
 
 
 

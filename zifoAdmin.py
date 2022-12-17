@@ -1,6 +1,9 @@
 from zifoDatabase import Admin,Users,Employee
 from zifoDatabase import session
 import os
+from style import *
+from colorama import init
+init(autoreset=True)
 
 class ZifoAdmin :
   #console refresh
@@ -12,10 +15,10 @@ class ZifoAdmin :
       users = session.query(Users).filter(Users.status == False).all()
       if users == [] :
         self.clear()
-        print("Currently no unapproved users")
+        print(red + "Currently no unapproved users")
         return
       self.clear()
-      print('_____________unapproved list______________')
+      print(sky_blue + '_____________unapproved list______________')
       print()
       print('User_Id     Employee_Id     Name      role    status ')
       print()
@@ -24,8 +27,7 @@ class ZifoAdmin :
           print((user.employee.id).ljust(14),end='')
           print((user.employee.name).ljust(14),end='')
           print((user.role).ljust(14),end='')
-          status = 'Approved' if user.status else 'Unapproved'
-          print((status).ljust(14),end='')
+          print(red + 'Unapproved'.ljust(14),end='')
           print()
       print()
       print()
@@ -36,7 +38,7 @@ class ZifoAdmin :
       users = session.query(Users).all()
       if users :
         self.clear()
-        print('___________________Users list_____________________')
+        print(sky_blue + '___________________Users list_____________________')
         print()
         print('User_Id     Employee_Id     Name      role    status ')
         print()
@@ -50,7 +52,7 @@ class ZifoAdmin :
             print((user.employee.id).ljust(14),end='')
             print((user.employee.name).ljust(14),end='')
             print((user.role).ljust(14),end='')
-            status = 'Approved' if user.status else 'Unapproved'
+            status = green+'Approved' if user.status else red+'Unapproved'
             print((status).ljust(14),end='')
             print()
         print()
@@ -63,22 +65,22 @@ class ZifoAdmin :
 
       else :
        self.clear()
-       print('Currently No users...')
+       print(green + 'Currently No users...')
 
 
   # add employee in database
   def addEmployee(self):
      self.clear()
-     emp_id = input('Enter Emoloyee id ')
+     emp_id = input(yellow + 'Enter Emoloyee id '+ normal)
      emps = session.query(Employee).filter(Employee.id == emp_id).first()
      if emps is not None :
        self.clear()
-       print('Employee Already Exists...')
+       print(green + 'Employee Already Exists...')
        return
-     name = input('Enter name ')
-     email = input('Enter your Email ')
-     dob = input('Enter Date Of Birth ')
-     role = input('Enter Role ').upper()
+     name = input(yellow + 'Enter name '+ normal)
+     email = input(yellow + 'Enter your Email ' + normal)
+     dob = input(yellow + 'Enter Date Of Birth '+ normal)
+     role = input(yellow + 'Enter Role ' + normal).upper()
      emp = Employee(
            id = emp_id,
            name = name,
@@ -89,7 +91,7 @@ class ZifoAdmin :
      session.add(emp)
      session.commit()
      session.close()
-     print('Employee added sucessfully... ')
+     print(green + 'Employee added sucessfully... ')
 
 
 
@@ -100,15 +102,15 @@ class ZifoAdmin :
     self.clear()
     user =  session.query(Users).filter(Users.id == id).first()
     if user is None:
-     print('User Not Found...')
+     print(red + 'User Not Found...')
      return
     if user.status :
-       print('User is Already in Approved List... ')
+       print(red + 'User is Already in Approved List... ')
     else :
        user.status = True
        session.commit()
        session.close()
-       print('User approved sucessfully... ')
+       print(green + 'User approved sucessfully... ')
        return
 
   # Disapprove users
@@ -116,16 +118,16 @@ class ZifoAdmin :
     self.clear()
     user =  session.query(Users).filter(Users.id == id).first()
     if user is None:  
-      print('User Not Found...')  
+      print(red + 'User Not Found...')  
       return
     if user.status:
         user.status = False
         session.commit()
         session.close()
-        print('User disapproved Successfully')
+        print(green + 'User disapproved Successfully')
        
     else :
-       print('User Already no Access...')
+       print(red + 'User Already no Access...')
        return
 
 
@@ -140,10 +142,10 @@ class ZifoAdmin :
      session.delete(user)
      session.commit()
      session.close()
-     print('User Sucessfully deleted.... ')
+     print(green + 'User Sucessfully deleted.... ')
      return
    else :
-     print('User Not Found...')
+     print(red + 'User Not Found...')
      return
 
   #Block specified employee
@@ -151,10 +153,10 @@ class ZifoAdmin :
      self.clear()
      emp = session.query(Employee).filter(Employee.id == id).first()
      if emp is None :
-       print('Inavlid Employee id...')
+       print(red + 'Invalid Employee id...')
        return
      elif not emp.isAproved :
-       print('Already blocked user...')
+       print(red + 'Already blocked user...')
        return
      else :
        emp.isAproved = False
@@ -162,16 +164,16 @@ class ZifoAdmin :
          emp.user[0].status = False
        session.commit()
        session.close()
-       print('Employee blocked sucessfully...')
+       print(green + 'Employee blocked sucessfully...')
   #Unblock Specified Emoloyee
   def unblockEmp(self,id) :
      self.clear()
      emp = session.query(Employee).filter(Employee.id == id ).first()
      if emp is None :
-       print('Inavlid Employee id...')
+       print(red + 'Invalid Employee id...')
        return
      elif emp.isAproved :
-       print('Already Normal user...')
+       print(red + 'Already Normal user...')
        return
      else :
        emp.isAproved = True
@@ -179,7 +181,7 @@ class ZifoAdmin :
          emp.user[0].status = True
        session.commit()
        session.close()
-       print('Employee unblocked sucessfully...')
+       print(green + 'Employee unblocked sucessfully...')
 
 
   #Show Employee nessesary details
@@ -187,17 +189,19 @@ class ZifoAdmin :
      self.clear()
      emps = session.query(Employee).all()
      if emps is None :
-        print('No employee available in our database...')
+        print(green + 'No employee available in our database...')
         return
-     print('Emp_id       name        blocked        user_id'  )
+     print(sky_blue + '______________Employee List________________\n')
+     print('Emp_id       name        status         user_id'  )
      for emp in emps :
          print(emp.id.ljust(9),end='')
          print(emp.name.ljust(15),end='')
-         print(str(not emp.isAproved).ljust(10),end='')
+         status = green + 'Normal' if emp.isAproved else red + 'Blocked'
+         print(status.ljust(18),end='')
          if emp.user :
-            print(emp.user[0].id.ljust(14),end='')
+            print(emp.user[0].id.ljust(15),end='')
          else :
-           print('None'.ljust(10),end='')
+           print('None'.ljust(15),end='')
          print('\n')
      print('\n')
 
