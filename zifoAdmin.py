@@ -151,12 +151,16 @@ class ZifoAdmin :
      if emp is None :
        print('Inavlid Employee id...')
        return
-
-     emp.isAproved = False
-     emp.user[0].status = False
-     session.commit()
-     session.close()
-     print('Employee blocked sucessfully...')
+     elif not emp.isAproved :
+       print('Already blocked user...')
+       return
+     else :
+       emp.isAproved = False
+       if emp.user :
+         emp.user[0].status = False
+       session.commit()
+       session.close()
+       print('Employee blocked sucessfully...')
 
   def unblockEmp(self,id) :
      self.clear()
@@ -164,9 +168,13 @@ class ZifoAdmin :
      if emp is None :
        print('Inavlid Employee id...')
        return
-
-     emp.isAproved = True
-     emp.user[0].status = True
-     session.commit()
-     session.close()
-     print('Employee unblocked sucessfully...')
+     elif emp.isAproved :
+       print('Already Normal user...')
+       return
+     else :
+       emp.isAproved = True
+       if emp.user :
+         emp.user[0].status = True
+       session.commit()
+       session.close()
+       print('Employee unblocked sucessfully...')

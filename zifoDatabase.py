@@ -39,6 +39,8 @@ class Users(Base) :
   role = Column(String(50))
   status = Column(Boolean,default = False)
   firstLogin = Column(Boolean,default = True)
+  qn_no = Column(Integer,nullable=False)
+  answer = Column(String(50),nullable=False)
   employee_id = Column(String(50),ForeignKey('employee.id'))
   employee = relationship('Employee',back_populates='user')
   samples = relationship('Sample',back_populates='author')
@@ -66,11 +68,15 @@ Base.metadata.create_all(bind=engine)
 if __name__ == '__main__' :
   admin = session.query(Admin).all()
   if len(admin) == 0 :
+     print('__________________Admin signUp______________\n')
+     id = input('enter id ')
+     name = input('enter name ')
+     password = input('enter password ')
      new_admin = Admin(
-               id = 'shan',
-               name = 'prashanth',
-               password = '12345'
+               id = id,
+               name = name,
+               password = password
        )
      session.add(new_admin)
      session.commit()
-     print('Default admin added...')
+     print('Default admin Initilized...')

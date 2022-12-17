@@ -28,3 +28,12 @@ def addList(list):
    for item in list :
       temp += str(item)
    return temp
+
+
+qnDict = {
+   '1' : 'In what city were you born?',
+   '2' : 'What is your favorite movie?',
+   '3' : 'What is your pet name?',
+   '4' : 'What is the first name of your first boyfriend/girlfriend?',
+   '5' : 'What was the name of your first grade teacher?'
+   }

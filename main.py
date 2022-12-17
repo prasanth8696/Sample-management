@@ -16,7 +16,7 @@ def main() :
   print('2 -> User Sign in ')
   print('3 -> Admin Signin ')
   print('4 -> reset Password ')
-  print('5 -> Get your password(this feature will deprecate in future ')
+  print('5 -> Forget Password ')
   print('6 -> Exit ')
   try :
      choice = int(input('Enter '))
@@ -43,8 +43,12 @@ def main() :
      clear()
      sms.resetPassword(user_id)
   elif choice == 5 :
-     sms.getPassword()
+     user_id = input('enter user Id ')
+     clear()
+     sms.forgetPassword(user_id)
   elif choice == 6 :
+     clear()
+     print(' program Sucessfully terminated...')
      exit()
 
   else :

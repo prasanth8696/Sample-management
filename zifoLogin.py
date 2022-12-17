@@ -1,7 +1,7 @@
 import os
 import time
 from zifoDatabase import session
-from zifoGenerate import userIdGenerate,passwordGenerate
+from zifoGenerate import userIdGenerate,passwordGenerate,qnDict
 from zifoDatabase import Admin,Employee,Users
 from zifoAdmin import ZifoAdmin
 from zifoUser import ZifoUser
@@ -27,12 +27,26 @@ class ZifoLogin :
     elif len(emp.user) > 0 :
       print('User Already Exists... ')
     else :
+      for id,question in qnDict.items() :
+        print(f'{id} - {question}')
+      
+      print('\nSelect security questions for Authendication...')
+      try :
+        qn_no = int(input('Enter anyOne scurity qn Id '))
+        ans = input('Enter Answer... ')
+        if qn_no > 5 and qn_no < 1 :
+           raise ValueError
+      except ValueError :
+        print('Inavlid security question Id')
+        return
       user_id = userIdGenerate(emp.role)
       password = passwordGenerate()
       new_user = Users(
             id = user_id,
             password = password,
             role = emp.role,
+            qn_no = qn_no,
+            answer = ans,
             employee = emp
            )
       session.add(new_user)
@@ -150,7 +164,7 @@ class ZifoLogin :
             print('sucessfully logged')
             print()
             adminObj = ZifoAdmin()
-            print(f'Welcome back Master...{admin.id}')
+            print(f'Welcome back Master...{admin.name}')
             print()
             time.sleep(1)
             while(True) :
@@ -196,10 +210,10 @@ class ZifoLogin :
                  adminObj.showEmployee()
              elif n == 8 :
                  emp_id = input('Enter emp id ')
-                 adminObj.blockEmp(user_id)
+                 adminObj.blockEmp(emp_id)
              elif n == 9 :
                  emp_id = input('Enter emp id ')
-                 adminObj.unblockEmp(user_id)
+                 adminObj.unblockEmp(emp_id)
              elif n == 10 :
                   self.clear()
                   time.sleep(1)
@@ -256,7 +270,7 @@ class ZifoLogin :
           print('Password Mismatch...')
           self.resetPassword(user_id)
           return
-
+#This method was Deprecated 
   def getPassword(self) :
      self.clear()
      user_id = input('enter user id ')
@@ -266,6 +280,66 @@ class ZifoLogin :
        return
      else :
         print(f'Your password is {user.password}')
+
+
+
+  def forgetPassword(self,user_id,count = 0) :
+     count += 1
+     user = session.query(Users).filter(Users.id == user_id).first()
+     if user is None :
+       print('Invalid user...')
+       return
+     qn_no = str(user.qn_no)
+     print(f'your security question is : \n\t{qnDict[qn_no]}')
+     answer = input('Enter your Answer... ')
+     if answer == user.answer :
+          print(
+              ''' * Length must be atleast 8 and maximum 15
+                  * Minimum 1 Capital letter
+                  * Minimum 1 Small letter
+                  * Minimum 1 numeric and Symbol\n '''
+                )
+          new_pass = input('Enter New Password  ')
+          # check password is valid or not
+          res = self.check_pass(new_pass)
+          if res :
+            retype_pass = input('Enter your Passoword Again... ')
+            if new_pass == retype_pass :
+              user.password = new_pass
+              session.commit()
+              self.clear()
+              print('Password sucessfully Updated')
+            else :
+              if count >= 3 :
+                print('Too many attempts...')
+                return
+
+              print('New Password Mismatch...')
+              self.forgetPassword(user_id,count)
+              return
+#if user forget password before first login you must change the firstLogin value == False
+            if user.firstLogin :
+              user.firstLogin = False
+              session.commit()
+            return
+          else :
+            self.clear()
+            if count >= 3:
+              print('Too many attempts...')
+              return
+
+            print('Not Valid password...')
+            self.forgetPassword(user_id,count)
+            return
+
+     else :
+          self.clear()
+          print('Answer is Wrong...')
+          print(f'{3-count} attempts left...')
+          if count >= 3 :
+            return
+          self.forgetPassword(user_id,count)
+          return
 
   def check_pass(self,new_pass):
      upper = 0;lower = 0;number = 0;symbol = 0

@@ -65,7 +65,7 @@ class ZifoUser :
        if datetime.datetime.now() > sample.expire_date :
          expireIn = 'Expired'
        else:
-         expireTime = datetime.datetime.now() - sample.expire_date
+         expireTime =abs(datetime.datetime.now() - sample.expire_date)
          expireIn = str(expireTime.days) + ' days ' + str(expireTime.seconds) + ' Seconds'
 
        print(str(expireIn).ljust(18),end='')
@@ -99,7 +99,7 @@ class ZifoUser :
        if datetime.datetime.now() > sample.expire_date :
             expireIn = 'Expired'
        else :
-            expireTime = datetime.datetime.now() - sample.expire_date
+            expireTime =abs(datetime.datetime.now() - sample.expire_date)
             expireIn = f'{expireTime.days} days {expireTime.seconds} Seconds'
        print(str(expireIn).ljust(18),end='')
        print(author.id.ljust(14),end='')
