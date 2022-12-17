@@ -71,16 +71,16 @@ class ZifoAdmin :
   # add employee in database
   def addEmployee(self):
      self.clear()
-     emp_id = input(yellow + 'Enter Emoloyee id '+ normal)
+     emp_id = input(yellow + 'Enter Emoloyee id '+ normal).strip()
      emps = session.query(Employee).filter(Employee.id == emp_id).first()
      if emps is not None :
        self.clear()
        print(green + 'Employee Already Exists...')
        return
-     name = input(yellow + 'Enter name '+ normal)
-     email = input(yellow + 'Enter your Email ' + normal)
-     dob = input(yellow + 'Enter Date Of Birth '+ normal)
-     role = input(yellow + 'Enter Role ' + normal).upper()
+     name = input(yellow + 'Enter name '+ normal).strip()
+     email = input(yellow + 'Enter your Email ' + normal).strip()
+     dob = input(yellow + 'Enter Date Of Birth '+ normal).strip()
+     role = input(yellow + 'Enter Role ' + normal).strip().upper()
      emp = Employee(
            id = emp_id,
            name = name,

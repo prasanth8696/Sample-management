@@ -23,7 +23,7 @@ def main() :
   print('5 -> Forget Password ')
   print('6 -> Exit  ')
   try :
-     choice = int(input(yellow + 'Enter ' + normal))
+     choice = int(input(yellow + 'Enter ' + normal).strip())
   except ValueError :
      clear()
      print(red + 'Invalid Input...')
@@ -47,11 +47,11 @@ def main() :
   elif choice == 3 :
      sms.adminLogin()
   elif choice == 4 :
-     user_id = input(yellow+ 'enter user Id ' + normal)
+     user_id = input(yellow+ 'enter user Id ' + normal).strip()
      clear()
      sms.resetPassword(user_id)
   elif choice == 5 :
-     user_id = input(yellow + 'enter user Id ' + normal)
+     user_id = input(yellow + 'enter user Id ' + normal).strip()
      clear()
      sms.forgetPassword(user_id)
   elif choice == 6 :

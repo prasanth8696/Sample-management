@@ -18,10 +18,10 @@ class ZifoUser :
        print(red + 'you dont have rights to do add samples... ')
        return
      try :
-       name = input(yellow + 'Enter Reagents name ' + normal )
-       quantity = input(yellow +'Enter quantity in kg(Liguid also)  ' + normal)
-       type = int(input(yellow + 'enter type of reactive 1 => reactive,0 => Non reactive ' + normal))
-       expire_days = int(input(yellow + 'Enter no of days to expire ' + normal))
+       name = input(yellow + 'Enter Reagents name ' + normal ).strip()
+       quantity = input(yellow +'Enter quantity in kg(Liguid also)  ' + normal).strip()
+       type = int(input(yellow + 'enter type of reactive 1 => reactive,0 => Non reactive ' + normal).strip())
+       expire_days = int(input(yellow + 'Enter no of days to expire ' + normal).strip())
        if type > 1 and type < 0 :
          raise ValueError
      except ValueError :
@@ -138,7 +138,7 @@ class ZifoUser :
       return
     #Input Exception
     try :
-       sample_id = int(input(yellow + 'Enter sample id ' + normal))
+       sample_id = int(input(yellow + 'Enter sample id ' + normal).strip())
     except ValueError :
        self.clear()
        print(red + 'Invalid Input...')
@@ -167,7 +167,7 @@ class ZifoUser :
       print(red + 'you dont have permissions to delete the samples...')
       return
     try :
-      sample_id = int(input(yellow + 'Enter Sample Id ' + normal))
+      sample_id = int(input(yellow + 'Enter Sample Id ' + normal).strip())
     except ValueError :
       self.clear()
       print(red + 'Invalid Input...')

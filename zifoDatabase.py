@@ -71,9 +71,9 @@ if __name__ == '__main__' :
   admin = session.query(Admin).all()
   if len(admin) == 0 :
      print('__________________Admin signUp______________\n')
-     id = input('enter id ')
-     name = input('enter name ')
-     password = input('enter password ')
+     id = input('enter id ').strip()
+     name = input('enter name ').strip()
+     password = input('enter password ').strip()
      new_admin = Admin(
                id = id,
                name = name,
