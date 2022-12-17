@@ -10,7 +10,7 @@ class ZifoLogin :
      val = 'cls' if os.name == 'nt' else 'clear'
      os.system(val)
 
-
+   #Register user using Employee id
   def register(self) :
     self.clear()
     id = input('Enter Employee Id... ')
@@ -55,7 +55,7 @@ class ZifoLogin :
       print(f'Generated Password {password}')
       return
 
-
+  #Employee Login...
   def employeeLogin(self):
      self.clear()
      print('_______________User Login Page_______________')
@@ -142,7 +142,7 @@ class ZifoLogin :
         print('Password mismatch...')
         return
 
-
+   #Admin login 
   def adminLogin(self):
      self.clear()
      print('______________Adminstrator Login______________')
@@ -227,7 +227,7 @@ class ZifoLogin :
            return
 
 
-
+   #reset your password using old password...
   def resetPassword(self,user_id):
       user = session.query(Users).filter(Users.id == user_id).first()
       if user is None :
@@ -282,7 +282,7 @@ class ZifoLogin :
         print(f'Your password is {user.password}')
 
 
-
+  #Forget user password using security question
   def forgetPassword(self,user_id,count = 0) :
      count += 1
      user = session.query(Users).filter(Users.id == user_id).first()
@@ -340,7 +340,7 @@ class ZifoLogin :
             return
           self.forgetPassword(user_id,count)
           return
-
+  #Check input password is Valid or not
   def check_pass(self,new_pass):
      upper = 0;lower = 0;number = 0;symbol = 0
      if len(new_pass) < 8 or len(new_pass) > 15 :

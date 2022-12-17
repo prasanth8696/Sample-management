@@ -1,5 +1,5 @@
 import random
-
+#automatic user id generation...
 def userIdGenerate(role):
     temp_range = range(1000,9999)
     if role ==  'SCI' :
@@ -8,7 +8,7 @@ def userIdGenerate(role):
     if role == 'LAB' :
       return 'LAB' + addList(random.sample(temp_range,2))
 
-
+#automatic temp password generation...
 def passwordGenerate():
    upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
