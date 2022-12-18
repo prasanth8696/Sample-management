@@ -106,7 +106,8 @@ class ZifoLogin :
  3 -> View all Samples(Scientist and lab assist)
  4 -> Update Samples(Scientist Only)
  5 -> Delete Samples(Scientist Only)
- 6 -> Logout
+ 6 -> Generate Report (scientist and labtech)
+ 7 -> Logout
           '''
           #add doc string
               )
@@ -139,6 +140,9 @@ class ZifoLogin :
            self.clear()
            userObj.deleteSamples(user)
          elif choice == 6 :
+           self.clear()
+           userObj.generateReport(user.id)
+         elif choice == 7 :
            self.clear()
            print(green + 'Successfully loggedOut...')
            time.sleep(1)

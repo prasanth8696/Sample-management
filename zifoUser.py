@@ -1,6 +1,7 @@
 import os
+import csv
 import datetime
-from zifoDatabase import session,Sample
+from zifoDatabase import session,Sample,Users
 from style import *
 from colorama import init
 init(autoreset=True)
@@ -32,7 +33,7 @@ class ZifoUser :
      except KeyboardInterrupt :
        self.clear()
        print('program sucessfully exited using KeyboardInterrupt')
-       Exit()
+       exit()
      except Exception :
         print(red + 'Something went Wrong...')
         return
@@ -177,7 +178,12 @@ class ZifoUser :
     if sample is None :
       print(red + 'Invalid sample Id...')
       return
-    if sample.author_id != author.id :
+    elif not sample.author :
+      session.delete(sample)
+      session.commit()
+      print(green + 'Unknown sample deleted sucessfully...')
+      return
+    elif sample.author_id != author.id :
       print(red + 'you dont have permissions to delete another person samples ...')
       return
     session.delete(sample)
@@ -203,3 +209,33 @@ class ZifoUser :
              print('\n')
 
     print('\n')
+  #createReport for Samples(Scientist and Lab tech will use this method)
+  def generateReport(self,id) :
+     user = session.query(Users).filter(Users.id == id).first()
+     if user is None :
+       print(red + 'Invalid User...')
+     samples = session.query(Sample).all()
+     #check samples are available or not if not available raise exception
+     if not samples :
+        print(red + 'Currently No samples Available report cannot be generated... ')
+        return
+     #File name creation
+     if user.role == 'SCI' :
+       fileName = f'{user.id}({user.employee.name})-{datetime.datetime.now()}_report.csv'
+     else :
+       fileName = f'{user.id}({user.employee.name})-{datetime.datetime.now()}_report.csv'
+
+     fieldnames = ['ID','NAME','TYPE','QUANTITY(KG)','ADDED_DATE','EXPIRE_DATE','EXPIRE_IN','AUTHOR_ID','EMPLOYEE_ID']
+     if not  os.path.exists('reports') :
+        os.makedirs('reports')
+     cwd = os.getcwd()
+     path = os.path.join(cwd,f'reports/{fileName}')
+     with open(path, 'w') as reportFile :
+        csv_writer = csv.DictWriter(reportFile,fieldnames = fieldnames)
+        #initilize the header
+        csv_writer.writeheader()
+
+        for sample in samples :
+           sampleDetail = sample.reportList()
+           csv_writer.writerow(sampleDetail)
+     print(f'{pink} {fileName} {green} created sucessfully...')

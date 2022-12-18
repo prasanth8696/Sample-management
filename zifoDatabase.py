@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import sessionmaker,relationship
 
+import datetime
 
 
 
@@ -64,6 +65,31 @@ class Sample(Base) :
    expire_date = Column(DateTime,nullable=False)
    author_id = Column(String(50),ForeignKey('user.id'))
    author = relationship('Users',back_populates='samples')
+
+   # For report creation
+   def reportList(self) :
+      sampleDict = {}
+      sampleDict['ID'] = self.id
+      sampleDict['NAME'] = self.name
+      type = 'reactive' if self.reactive else 'Non-reactive'
+      sampleDict['TYPE'] = type
+      sampleDict['QUANTITY(KG)'] = self.quantity
+      sampleDict['ADDED_DATE'] = str(self.entry_date)
+      sampleDict['EXPIRE_DATE'] = str(self.expire_date)
+      expireIn = self.expire_date - datetime.datetime.now()
+      if expireIn.days < 0 :
+         expireTime = 'Expired'
+      else :
+         expireTime = f'{expireIn.days}days {expireIn.seconds}sec'
+         sampleDict['EXPIRE_IN'] = expireTime
+      #check samples are unknown are not 
+      if self.author :
+        sampleDict['AUTHOR_ID'] = self.author_id
+        sampleDict['EMPLOYEE_ID'] = self.author.employee.id
+      else :
+        sampleDict['AUTHOR_ID'] = 'NULL'
+        sampleDict['EMPLOYEE_ID'] = 'NULL'
+      return sampleDict
 
 Base.metadata.create_all(bind=engine)
 #initilize deafult admin
