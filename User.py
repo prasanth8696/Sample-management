@@ -1,14 +1,14 @@
 import os
 import csv
 import datetime
-from zifoDatabase import session, Sample, Users
+from Database import session, Sample, Users
 from style import *
 from colorama import init
 
 init(autoreset=True)
 
 
-class ZifoUser:
+class User:
     def clear(self):
         clear_val = "cls" if os.name == "nt" else "clear"
         os.system(clear_val)

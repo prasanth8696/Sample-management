@@ -1,17 +1,17 @@
 import os
 import time
-from zifoDatabase import session
-from zifoGenerate import userIdGenerate, passwordGenerate, qnDict
-from zifoDatabase import Admin, Employee, Users
-from zifoAdmin import ZifoAdmin
-from zifoUser import ZifoUser
+from Database import session
+from Generate import userIdGenerate, passwordGenerate, qnDict
+from Database import Admin, Employee, Users
+from Admin import AdminCls
+from User import User
 from style import *
 from colorama import init
 
 init(autoreset=True)
 
 
-class ZifoLogin:
+class Login:
     def clear(self):
         val = "cls" if os.name == "nt" else "clear"
         os.system(val)
@@ -104,7 +104,7 @@ class ZifoLogin:
                 print()
 
             print(f"Welcome back {pink}{user.employee.name}\n")
-            userObj = ZifoUser()
+            userObj = User()
             print()
             userObj.printExpireSamples(user)
 
@@ -186,7 +186,7 @@ class ZifoLogin:
                 self.clear()
                 print(green + "sucessfully logged")
                 print()
-                adminObj = ZifoAdmin()
+                adminObj = AdminCls()
                 print(f"Welcome back Master...{pink}{admin.name}")
                 print()
                 time.sleep(1)
@@ -419,3 +419,21 @@ class ZifoLogin:
             return True
         else:
             return False
+
+
+
+
+        def forgetPassOtp(self,user_id) :
+                user = session.qyery(Users).filter(Users.id == user_id).first()
+
+                if user is None :
+                    print(red + 'Invalid user id ...')
+                phoneNo = user.phone_no
+                otp,time = auth.generateOtp(phoneNo)
+
+                verifyed = auth.verifyOtp(otp,time)
+
+                if not verifyed :
+                    return
+                else :
+                    pass

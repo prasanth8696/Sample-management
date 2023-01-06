@@ -16,7 +16,7 @@ import datetime
 
 
 # you can use any sql database by just change database url but i use sqlite database
-SQL_ALCHEMY_DATABASE_URL = "sqlite:///./zifoDatabase.db"
+SQL_ALCHEMY_DATABASE_URL = "sqlite:///./Database.db"
 
 engine = create_engine(SQL_ALCHEMY_DATABASE_URL)
 

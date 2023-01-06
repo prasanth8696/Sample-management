@@ -1,5 +1,5 @@
-from zifoDatabase import Admin, Users, Employee
-from zifoDatabase import session
+from Database import Admin, Users, Employee
+from Database import session
 import os
 from style import *
 from colorama import init
@@ -7,7 +7,7 @@ from colorama import init
 init(autoreset=True)
 
 
-class ZifoAdmin:
+class AdminCls:
     # console refresh
     def clear(self):
         clear_val = "cls" if os.name == "nt" else "clear"
