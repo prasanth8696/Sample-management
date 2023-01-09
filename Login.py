@@ -7,6 +7,7 @@ from Admin import AdminCls
 from User import User
 from style import *
 from colorama import init
+from Mail import signUpIndicate
 
 init(autoreset=True)
 
@@ -67,6 +68,7 @@ class Login:
             self.clear()
             print(f"Generated User id {pink} {user_id}")
             print(f"Generated Password {pink} {password}")
+            signUpIndicate(user_id)
             return
 
     # Employee Login...
@@ -94,13 +96,13 @@ class Login:
         if password == user.password:
             self.clear()
             print(green + "Successfully Logged...")
-            time.sleep(1.5)
+            time.sleep(.5)
             print()
             if user.firstLogin:
                 print(yellow + "Please change your temp password... ")
                 print()
                 self.resetPassword(user.id)
-                time.sleep(1)
+                time.sleep(.5)
                 print()
 
             print(f"Welcome back {pink}{user.employee.name}\n")
@@ -156,7 +158,7 @@ class Login:
                 elif choice == 7:
                     self.clear()
                     print(green + "Successfully loggedOut...")
-                    time.sleep(1)
+                    time.sleep(.5)
                     return
             else:
                 self.clear()
@@ -168,28 +170,26 @@ class Login:
     # Admin login
     def adminLogin(self):
         self.clear()
-        print(sky_blue + "______________Adminstrator Login______________")
-        print()
+        print(sky_blue + "______________Adminstrator Login______________\n")
         user_id = input(yellow + "Enter Admin Id " + normal).strip()
         print()
         admin = session.query(Admin).filter(Admin.id == user_id).first()
         if admin is None:
-            print(red + "Administrator Not Found...")
-            print()
-            time.sleep(1)
+            print(red + "Administrator Not Found...\n")
+            time.sleep(.5)
             return
         else:
             password = input(yellow + "Enter password... " + normal).strip()
             if admin.password == password:
                 print(yellow + "Logging...")
-                time.sleep(2)
+                time.sleep(1)
                 self.clear()
                 print(green + "sucessfully logged")
                 print()
                 adminObj = AdminCls()
                 print(f"Welcome back Master...{pink}{admin.name}")
                 print()
-                time.sleep(1)
+                time.sleep(.5)
                 while True:
                     print()
                     print("1 -> unApproved usersList...")
@@ -419,21 +419,18 @@ class Login:
             return True
         else:
             return False
+        #under construction
+        def forgetPassOtp(self, user_id):
+            user = session.qyery(Users).filter(Users.id == user_id).first()
 
+            if user is None:
+                print(red + "Invalid user id ...")
+            phoneNo = user.phone_no
+            otp, time = auth.generateOtp(phoneNo)
 
+            verifyed = auth.verifyOtp(otp, time)
 
-
-        def forgetPassOtp(self,user_id) :
-                user = session.qyery(Users).filter(Users.id == user_id).first()
-
-                if user is None :
-                    print(red + 'Invalid user id ...')
-                phoneNo = user.phone_no
-                otp,time = auth.generateOtp(phoneNo)
-
-                verifyed = auth.verifyOtp(otp,time)
-
-                if not verifyed :
-                    return
-                else :
-                    pass
+            if not verifyed:
+                return
+            else:
+                pass

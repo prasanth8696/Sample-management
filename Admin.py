@@ -3,6 +3,7 @@ from Database import session
 import os
 from style import *
 from colorama import init
+from Mail import  approveIndicate,disapproveIndicate
 
 init(autoreset=True)
 
@@ -105,6 +106,7 @@ class AdminCls:
             session.commit()
             session.close()
             print(green + "User approved sucessfully... ")
+            approveIndicate(id)
             return
 
     # Disapprove users
@@ -119,10 +121,12 @@ class AdminCls:
             session.commit()
             session.close()
             print(green + "User disapproved Successfully")
+            disapproveIndicate(id)
 
         else:
             print(red + "User Already no Access...")
             return
+
 
     # Delete users
     def deleteUser(self, id):

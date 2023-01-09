@@ -62,6 +62,7 @@ class Admin(Base):
     id = Column(String(50), primary_key=True)
     name = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
+    email = Column(String(50),nullable = False)
 
 
 # Sample table
@@ -110,8 +111,9 @@ if __name__ == "__main__":
         print("__________________Admin signUp______________\n")
         id = input("enter id ").strip()
         name = input("enter name ").strip()
+        email = input("Enter email ").strip()
         password = input("enter password ").strip()
-        new_admin = Admin(id=id, name=name, password=password)
+        new_admin = Admin(id=id, name=name, password=password,email = email)
         session.add(new_admin)
         session.commit()
         session.close()

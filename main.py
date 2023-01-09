@@ -54,18 +54,18 @@ def main():
         sms.resetPassword(user_id)
     elif choice == 5:
         user_id = input(yellow + "enter user Id " + normal).strip()
-        print('1 - OTP Authendication ' )
-        print('2 - Security question ')
-        val = int(input(yellow + 'Enter ').strip())
-        if val == 2 :
-          clear()
-          sms.forgetPassword(user_id)
-        else :
-          clear()
-          sms.forgetPassOtp(user_id)
-    elif choice == 6 :
-       pass
-    elif choice == 7 :
+        print("1 - OTP Authendication ")
+        print("2 - Security question ")
+        val = int(input(yellow + "Enter ").strip())
+        if val == 2:
+            clear()
+            sms.forgetPassword(user_id)
+        else:
+            clear()
+            sms.forgetPassOtp(user_id)
+    elif choice == 6:
+        pass
+    elif choice == 7:
         clear()
         print(green + " program Sucessfully terminated...")
         print("                         Developed by" + red + " Shan....")
@@ -78,4 +78,3 @@ def main():
 if __name__ == "__main__":
     while True:
         main()
-
